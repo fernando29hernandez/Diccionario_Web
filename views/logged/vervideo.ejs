@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Diccionario</title>
+    <!-- Latest compiled and minified CSS -->
+    <!-- First include jquery js -->
+    <link href="https://vjs.zencdn.net/7.8.4/video-js.css" rel="stylesheet" />
+
+    <!-- If you'd like to support IE8 (for Video.js versions prior to v7) -->
+    <script src="https://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
+    <style>
+        .darker {
+            border-color: #ccc;
+            background-color: #ddd;
+        }
+
+
+        .time-right {
+            float: right;
+            color: #aaa;
+        }
+
+        .time-left {
+            float: left;
+            color: #999;
+        }
+    </style>
+</head>
+<% include static/head %>
+</head>
+
+<body>
+    <% include static/navbar %>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <br>
+                <h2><small class="text-muted">La palabra que estamos viendo es: </small><%= palabra.nombre %></h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-8">
+                <video width="100%" height="500" controls>
+                    <source src="/static/videos/<%=palabra.url_video %>" type="video/mp4">
+                </video>
+            </div>
+            <div class="col-sm-4">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="jumbotron" width="100%"
+                                style="height: 380px;overflow-y: scroll;max-height:380px;min-width: 80%;">
+                                <ul class="list-group" id="chat">
+                                
+                                </ul>
+
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="card" id="cuadro" style="height: 100px;max-height: 100px; width: 100%; min-width:80%;">
+                                <div class="card-body">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-sm-10">
+                                                <input type="text" id="nuevo_comentario" class="form-control"
+                                                    placeholder="Comentario...">
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <button class="btn btn-info" onclick="enviarcomentario()">
+                                                    <svg width="1em" height="1em" viewBox="0 0 16 16"
+                                                        class="bi bi-chat-dots-fill" fill="currentColor"
+                                                        xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd"
+                                                            d="M16 8c0 3.866-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.584.296-1.925.864-4.181 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7zM5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    //window.location.replace("/error");
+    let palabra = "<%= palabra.palabra_id %>"
+    let palabra1 = "<%= palabra.nombre %>"
+    let palabra2 = "<%= palabra.letra %>"
+    let palabra3 = "<%= palabra.url_video %>"
+    let estado = "<%= palabra.estado %>"
+
+    if (localStorage.getItem("usuariodiccionario") == undefined) {
+        let palabra = "<%= palabra.palabra_id %>"
+        window.location.replace("/vervideologout/"+palabra);
+    }
+    if(estado==0){
+        window.location.replace("/vervideoespera/"+palabra);
+    }
+    if(estado==2){
+        window.location.replace("/vervideorechazado/"+palabra);
+    }
+    
+    async function enviarcomentario() {
+        let comentario = document.getElementById('nuevo_comentario').value;
+        const timezoneOffset = (new Date()).getTimezoneOffset() * 60000;
+        const date = (new Date(Date.now() - timezoneOffset))
+            .toISOString()
+            .substring(0, 19)
+            .replace('T', ' ')       // replace T with a space
+        let palabra_id = "<%= palabra.palabra_id %>"
+        let usuario_id = localStorage.getItem("usuariodiccionario")
+        let body = {
+            contenido: comentario,
+            fecha: date,
+            palabra_id: palabra_id,
+            usuario_id: usuario_id
+        }
+        await fetch('/api/v1/comentarios', {
+            method: 'POST', // or 'PUT'
+            body: JSON.stringify(body),  // data can be `string` or {object}!
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }) // data can be `string` or {object}!})
+            .then(function (response) {
+
+                return response.json();
+            })
+            .then(function (myJson) {
+                let resultado = myJson.find;
+                console.log(myJson.result)
+                document.getElementById('nuevo_comentario').value = ""
+                getMensajes()
+                
+
+
+            });
+
+    }
+    async function getMensajes() {
+        let palabra_id = "<%= palabra.palabra_id %>"
+        var contador = 0;
+        await fetch('/api/v1/comentarios/' + palabra_id, {
+            method: 'GET', // or 'PUT'
+        })
+            .then(function (response) {
+
+                return response.json();
+            })
+            .then(function (myJson) {
+                let resultado = myJson.find;
+                //console.log(myJson.result)
+                let arreglo_resultado = myJson.result
+                let lista = document.getElementById("chat");
+                lista.innerHTML = "";
+                
+                arreglo_resultado.forEach(element => {
+                    let node = document.createElement("LI");
+                    node.setAttribute("class", "list-group-item")
+                    node.setAttribute("id", "mensaje"+contador)
+                    
+                    let texto_lista = ''
+                    const timezoneOffset = (new Date(element.fecha)).getTimezoneOffset() * 60000;
+                    const temp = new Date(element.fecha)
+                    const date = (new Date(temp - timezoneOffset))
+                        .toISOString()
+                        .substring(0, 19)
+                        .replace('T', ' ')       // replace T with a space
+                    //console.log(date)
+                    texto_lista = "<p>" + element.contenido + "</p><span class=\"time-left\">" +date + "</span>"
+                    node.innerHTML = texto_lista;
+                    let espacio = document.createElement("br");
+                    document.getElementById("chat").appendChild(node);
+                    document.getElementById("chat").appendChild(espacio);
+                    contador=contador+1;
+                });
+                console.log(contador)
+                var elmnt = document.getElementById("mensaje"+(contador-1));
+                elmnt.scrollIntoView();
+            });
+    }
+    getMensajes()
+</Script>
+<script src="https://vjs.zencdn.net/7.8.4/video.js"></script>
+
+</html>

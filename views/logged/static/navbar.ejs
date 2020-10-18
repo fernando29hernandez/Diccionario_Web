@@ -1,0 +1,38 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">Diccionario</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="/diccionario">Ver Diccionario <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="/nuevaPalabra">Ingresar Palabra <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="/mispalabras">Dashboard <span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+        <ul class="navbar-nav my-2 my-lg-0">
+
+            <li class="nav-item active">
+                <a class="nav-link " href="" onclick="salir()">Cerrar Sesión</a>
+            </li>
+
+        </ul>
+    </div>
+</nav>
+<script>
+    function salir(){
+        localStorage.removeItem("usuariodiccionario")
+        window.location.replace("/");
+    }
+
+</script>

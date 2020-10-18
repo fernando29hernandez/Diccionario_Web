@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Diccionario</title>
+    <!-- Latest compiled and minified CSS -->
+    <!-- First include jquery js -->
+    <% include static/head %>
+</head>
+
+<body>
+    <% include static/navbar %>
+    <div class="align-self-center"></div>
+    <div class="container ">
+
+        <div class="row ">
+            <div class="col-sm-4">
+            </div>
+            <div class="col-sm-4 ">
+                <div class="text-center border border-light p-5">
+
+                    <p class="h4 mb-4">Ingreso</p>
+
+                    <!-- Email -->
+                    <input type="email" id="email" class="form-control mb-4" placeholder="E-mail">
+                    <!-- Password -->
+                    <input type="password" id="password" class="form-control mb-4" placeholder="Password">
+                    <!-- Sign in button -->
+                    <button class="btn btn-info btn-block my-4" onclick="ingreso()">Ingresar</button>
+                    <!-- Register -->
+                    <p>¿Eres Nuevo?
+                        <a href="/registro">Registrate</a>
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+    if(localStorage.getItem("usuariodiccionario")!=undefined){
+        if(localStorage.getItem("administradordiccionario")==1){
+            window.location.replace("/indexadmin");
+        }else{
+            window.location.replace("/index");
+
+        }
+    }
+    async function ingreso() {
+        let correo = document.getElementById('email').value
+        let password = document.getElementById('password').value
+
+        let body = {
+            "correo": correo,
+            "pass": password
+        }
+        await fetch('/api/v1/users/verify', {
+            method: 'POST', // or 'PUT'
+            body: JSON.stringify(body),  // data can be `string` or {object}!
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }) // data can be `string` or {object}!})
+            .then(function (response) {
+
+                return response.json();
+            })
+            .then(function (myJson) {
+                let resultado = myJson.find;
+                if(resultado===1){
+                    localStorage.setItem("usuariodiccionario",myJson.result.usuario_id)
+                    localStorage.setItem("administradordiccionario",myJson.result.adminstrador)
+                    window.location.replace("/");
+                }
+                console.log(myJson.result)
+            });
+
+    }
+</Script>
+
+</html>

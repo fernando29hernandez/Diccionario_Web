@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Diccionario</title>
+    <!-- Latest compiled and minified CSS -->
+    <!-- First include jquery js -->
+    <% include static/head %>
+</head>
+
+<body>
+    <% include static/navbar %>
+    <ul class="list-group list-group-flush" id="diccionario">
+
+    </ul>
+
+</body>
+<script>
+    //window.location.replace("/error");
+    if (localStorage.getItem("usuariodiccionario") != undefined) {
+        window.location.replace("/diccionario");
+    }
+    async function getDataPalabras() {
+        await fetch('/api/v1/palabras/', {
+            method: 'GET', // or 'PUT'
+        }) // data can be `string` or {object}!})
+            .then(function (response) {
+
+                return response.json();
+            })
+            .then(function (myJson) {
+                let resultado = myJson.find;
+                console.log(myJson.result)
+                let arreglo_elementos = myJson.result
+                const cantidad_letras = []
+                arreglo_elementos.forEach(element => {
+                    if (element.estado == 1) {
+                        cantidad_letras.unshift(element.letra)
+                    }
+
+                })
+                //console.log(cantidad_letras)
+                let unique = removeDups(cantidad_letras);
+                unique = unique.sort()
+                //console.log(unique)
+                for (let i = 0; i < unique.length; i++) {
+                    let node = document.createElement("LI");
+                    node.setAttribute("class", "list-group-item")
+                    const palabras_incluidad = []
+                    let texto_lista = ''
+                    texto_lista = "" + unique[i] + "<ul class=\"list-group list-group-flush\">"
+                    arreglo_elementos.forEach(element => {
+                        if (element.estado == 1 && unique[i] == element.letra) {
+                            let botonver = "<a class=\"btn btn-info\" href=\"/vervideo/" + element.palabra_id + "\">Ver Video <svg width=\"1em\" height=\"1em\" viewBox=\"0 0 16 16\" class=\"bi bi-x-circle-fill\" fill=\"currentColor\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M11.596 8.697l-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z\"/> </svg></a>"
+                            let cuadricula = "<div class=\"row\"><div class=\"col-sm-8\">" + element.nombre + "</div><div class=\"col-sm-4\">" + botonver + "</div></div>"
+                            texto_lista += " <li class=\"list-group-item\">" + cuadricula + "</li>"
+                        }
+                    })
+                    texto_lista += "</ul>"
+                    node.innerHTML = texto_lista;
+                    document.getElementById("diccionario").appendChild(node);
+
+                }
+            });
+
+    }
+    function removeDups(names) {
+        let unique = {};
+        names.forEach(function (i) {
+            if (!unique[i]) {
+                unique[i] = true;
+            }
+        });
+        return Object.keys(unique);
+    }
+    function vervideo(idpalabra){
+        window.location.href("/vervideo/"+idpalabra);
+    }
+    getDataPalabras()
+</Script>
+
+</html>

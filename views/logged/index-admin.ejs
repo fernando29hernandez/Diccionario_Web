@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Diccionario</title>
+    <!-- Latest compiled and minified CSS -->
+    <!-- First include jquery js -->
+    <% include static/head %>
+</head>
+
+<body>
+    <% include static/navbar-admin %>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+
+                <div class="jumbotron">
+                    <h1 class="display-4">Diccionario de Lengua de señas</h1>
+                    <p class="lead">Bienvenidos!</p>
+                    <hr class="my-4">
+                    <p class="lead">
+                        <a class="btn btn-primary btn-lg" href="#" role="button">Ver más...</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+    //window.location.replace("/error");
+    if (localStorage.getItem("usuariodiccionario") == undefined) {
+        window.location.replace("/");
+    }
+    if(localStorage.getItem("administradordiccionario")==0){
+            window.location.replace("/index");
+    }
+</Script>
+
+</html>
