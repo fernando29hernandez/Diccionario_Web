@@ -63,6 +63,7 @@
 
         if (password != passwordconfirm) {
             $('#alerta1').addClass('show')
+            return 
         }
         let body = {
             "correo": correo,
