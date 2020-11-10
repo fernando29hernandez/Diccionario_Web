@@ -1,14 +1,37 @@
 const mysql = require('mysql');
 //local mysql db connection
-const dbConn = mysql.createConnection({
+var pool = mysql.createPool({
     host     : '35.194.71.234',
     user     : 'user',
     password : 'password',
     database : 'db',
-    port     : '32000'
+    port     : 32000
 });
-dbConn.connect(function(err) {
-    if (err) throw err;
-    console.log("Database Connected!");
-});
-module.exports = dbConn;
+
+module.exports = {
+    query: function(){
+        var sql_args = [];
+        var args = [];
+        for(var i=0; i<arguments.length; i++){
+            args.push(arguments[i]);
+        }
+        var callback = args[args.length-1]; //last arg is callback
+        pool.getConnection(function(err, connection) {
+        if(err) {
+                console.log(err);
+                return callback(err);
+            }
+            if(args.length > 2){
+                sql_args = args[1];
+            }
+        connection.query(args[0], sql_args, function(err, results) {
+          connection.release(); // always put connection back in pool after last query
+          if(err){
+                    console.log(err);
+                    return callback(err);
+                }
+          callback(null, results);
+        });
+      });
+    }
+};
