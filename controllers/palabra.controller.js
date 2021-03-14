@@ -35,7 +35,7 @@ exports.findAll = function(req, res) {
         console.log('controller')
         if (err)
             res.send(err);
-        console.log('res', palabras);
+        //console.log('res', palabras);
         let findWord = palabras.length>0?1:0;
         let resultbody = palabras.length>0?palabras:[];
         res.send({find:findWord,result:resultbody});
@@ -46,7 +46,7 @@ exports.findAllPending = function(req, res) {
         console.log('controller')
         if (err)
             res.send(err);
-        console.log('res', palabras);
+        //console.log('res', palabras);
         let findWord = palabras.length>0?1:0;
         let resultbody = palabras.length>0?palabras:[];
         res.send({find:findWord,result:resultbody});

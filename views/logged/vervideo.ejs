@@ -28,52 +28,48 @@
     </style>
 </head>
 <% include static/head %>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 </head>
 
 <body>
     <% include static/navbar %>
     <div class="container">
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-xs-12 col-sm-12">
                 <br>
                 <h2><small class="text-muted">La palabra que estamos viendo es: </small><%= palabra.nombre %></h2>
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-8">
-                <video width="100%" height="500" controls>
+            <div class="col-xs-12 col-sm-8 p-2">
+                <video width="100%" height="500" style="border-radius: 20px!important" controls>
                     <source src="/static/videos/<%=palabra.url_video %>" type="video/mp4">
                 </video>
             </div>
-            <div class="col-sm-4">
+            <div class="col-xs-12 col-sm-4 p-2"  >
                 <div class="container">
                     <div class="row">
-                        <div class="col-sm-12">
+                        <div class="col-xs-12 col-sm-12">
                             <div class="jumbotron" width="100%"
-                                style="height: 380px;overflow-y: scroll;max-height:380px;min-width: 80%;">
+                                style="height: 380px;overflow-y: scroll;max-height:380px;min-width: 80%;border-radius: 20px!important" >
                                 <ul class="list-group" id="chat">
                                 
                                 </ul>
 
                             </div>
                         </div>
-                        <div class="col-sm-12">
-                            <div class="card" id="cuadro" style="height: 100px;max-height: 100px; width: 100%; min-width:80%;">
+                        <div class="col-xs-12 col-sm-12 m-2">
+                            <div class="card" id="cuadro" style="height: 100px;max-height: 100px; width: 100%; min-width:90%;border-radius: 15px!important">
                                 <div class="card-body">
                                     <div class="container">
                                         <div class="row">
-                                            <div class="col-sm-10">
-                                                <input type="text" id="nuevo_comentario" class="form-control"
+                                            <div class="col-xs-4 col-sm-9">
+                                                <input type="text" style="width: 95%;max-width: 95%;border-radius: 20px!important" id="nuevo_comentario" class="form-control"
                                                     placeholder="Comentario...">
                                             </div>
-                                            <div class="col-sm-2">
+                                            <div class="col-xs-4 col-sm-3">
                                                 <button class="btn btn-info" onclick="enviarcomentario()">
-                                                    <svg width="1em" height="1em" viewBox="0 0 16 16"
-                                                        class="bi bi-chat-dots-fill" fill="currentColor"
-                                                        xmlns="http://www.w3.org/2000/svg">
-                                                        <path fill-rule="evenodd"
-                                                            d="M16 8c0 3.866-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.584.296-1.925.864-4.181 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7zM5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" />
-                                                    </svg>
+                                                    <i class="bi bi-chat-dots-fill"></i>
                                                 </button>
                                             </div>
                                         </div>
@@ -105,9 +101,17 @@
     if(estado==2){
         window.location.replace("/vervideorechazado/"+palabra);
     }
-    
+    document.querySelector('#nuevo_comentario').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            enviarcomentario();
+        }
+    });
     async function enviarcomentario() {
         let comentario = document.getElementById('nuevo_comentario').value;
+        if(!comentario.trim()){
+            
+            return;
+        }
         const timezoneOffset = (new Date()).getTimezoneOffset() * 60000;
         const date = (new Date(Date.now() - timezoneOffset))
             .toISOString()
@@ -173,7 +177,7 @@
                         .substring(0, 19)
                         .replace('T', ' ')       // replace T with a space
                     //console.log(date)
-                    texto_lista = "<p>" + element.contenido + "</p><span class=\"time-left\">" +date + "</span>"
+                    texto_lista = "<p style=\"word-wrap: break-word;\">" + element.contenido + "</p><span class=\"time-left\">" +date + "</span>"
                     node.innerHTML = texto_lista;
                     let espacio = document.createElement("br");
                     document.getElementById("chat").appendChild(node);

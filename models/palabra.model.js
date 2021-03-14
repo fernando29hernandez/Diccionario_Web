@@ -20,7 +20,7 @@ Palabra.create = function (newWord, result) {
         }
         else{
             //console.log(res)
-            console.log(res.insertId);
+            //console.log(res.insertId);
             result(null, res.insertId);
         }
     });
@@ -57,7 +57,7 @@ Palabra.findAll = function (result) {
             result(null, err);
         }
         else{
-            console.log('Palabras : ', res);
+            //console.log('Palabras : ', res);
             result(null, res);
         }
     });
@@ -69,7 +69,7 @@ Palabra.findAllPending = function (result) {
             result(null, err);
         }
         else{
-            console.log('Palabras : ', res);
+            //console.log('Palabras : ', res);
             result(null, res);
         }
     });

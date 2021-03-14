@@ -34,23 +34,23 @@
     <% include static/navbar %>
     <div class="container">
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-xs-12 col-sm-12">
                 <br>
                 <h2><small class="text-muted">La palabra que estamos viendo es: </small><%= palabra.nombre %></h2>
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-8">
-                <video width="100%" height="500" controls>
+            <div class="col-xs-12 col-sm-8">
+                <video width="100%" height="500" style="border-radius: 20px!important" controls>
                     <source src="/static/videos/<%=palabra.url_video %>" type="video/mp4">
                 </video>
             </div>
-            <div class="col-sm-4">
+            <div class="col-xs-12 col-sm-4">
                 <div class="container">
                     <div class="row">
-                        <div class="col-sm-12">
-                            <div class="jumbotron" width="100%"
-                                style="height: 480px;overflow-y: scroll;max-height:480px;min-width: 80%;">
+                        <div class="col-xs-12 col-sm-12">
+                            <div class="jumbotron" width="100%" 
+                                style="height: 480px;overflow-y: scroll;max-height:480px;min-width: 80%;border-radius: 20px!important">
                                 <h3>Este video por motivos de revisión aun no forma parte del diccionario</h3>
                             </div>
                         </div>
